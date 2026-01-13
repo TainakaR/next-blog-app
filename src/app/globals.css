@@ -1,3 +1,18 @@
+/* globals.css */
+
+@font-face {
+  font-family: "SolidBold"; /* 好きな名前でOK */
+  src: url("/fonts/Solid-Bold.otf") format("opentype");
+  font-weight: 700; /* font-bold (太字) として扱う設定 */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SmartFont"; /* 好きな名前でOK */
+  src: url("/fonts/SmartFont.otf") format("opentype");
+  font-style: normal;
+}
+
 @import "tailwindcss";
 
 :root {
@@ -10,6 +25,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --font-solid: "SolidBold", "sans-serif";
+  --font-smart: "SmartFont", "sans-serif";
 }
 
 @media (prefers-color-scheme: dark) {
