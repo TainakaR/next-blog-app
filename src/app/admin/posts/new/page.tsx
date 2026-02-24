@@ -1,9 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { twMerge } from "tailwind-merge";
+import { useAuth } from "@/app/_hooks/useAuth";
+import { supabase } from "@/utils/supabase";
 
 // カテゴリをフェッチしたときのレスポンスのデータ型
 type CategoryApiResponse = {
@@ -29,8 +31,12 @@ const Page: React.FC = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newCoverImageURL, setNewCoverImageURL] = useState("");
+  const [newCoverImageKey, setNewCoverImageKey] = useState<
+    string | undefined
+  >();
 
   const router = useRouter();
+  const { session } = useAuth();
 
   // カテゴリ配列 (State)。取得中と取得失敗時は null、既存カテゴリが0個なら []
   const [checkableCategories, setCheckableCategories] = useState<
@@ -108,6 +114,36 @@ const Page: React.FC = () => {
   const updateNewCoverImageURL = (e: React.ChangeEvent<HTMLInputElement>) => {
     // ここにカバーイメージURLのバリデーション処理を追加する
     setNewCoverImageURL(e.target.value);
+  };
+
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    setNewCoverImageKey(undefined); // 画像のキーをリセット
+    setNewCoverImageURL(""); // 画像のURLをリセット
+
+    // 画像が選択されていない場合は戻る
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    // 複数ファイルが選択されている場合は最初のファイルを使用する
+    const file = e.target.files?.[0];
+    const bucketName = "cover-image";
+    // バケット内のパスを指定
+    const path = `private/${file.name}`;
+    // ファイルが存在する場合は上書きするための設定 → upsert: true
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .upload(path, file, { upsert: true });
+
+    if (error || !data) {
+      window.alert(`アップロードに失敗 ${error.message}`);
+      return;
+    }
+    // 画像のキー (実質的にバケット内のパス) を取得
+    setNewCoverImageKey(data.path);
+    const publicUrlResult = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(data.path);
+    // 画像のURLを取得
+    setNewCoverImageURL(publicUrlResult.data.publicUrl);
   };
 
   // フォームの送信処理
@@ -221,18 +257,42 @@ const Page: React.FC = () => {
 
         <div className="space-y-1">
           <label htmlFor="coverImageURL" className="block font-bold">
-            カバーイメージ (URL)
+            カバーイメージ
           </label>
           <input
-            type="url"
-            id="coverImageURL"
-            name="coverImageURL"
-            className="w-full rounded-md border-2 px-2 py-1"
-            value={newCoverImageURL}
-            onChange={updateNewCoverImageURL}
-            placeholder="カバーイメージのURLを記入してください"
-            required
+            id="imgSelector"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className={twMerge(
+              "file:rounded file:px-2 file:py-1",
+              "file:bg-blue-500 file:text-white hover:file:bg-blue-600",
+              "file:cursor-pointer",
+            )}
           />
+          {newCoverImageURL && (
+            <div className="text-sm text-green-600">
+              画像がアップロードされました: {newCoverImageKey}
+            </div>
+          )}
+          <div className="mt-2 space-y-1">
+            <label
+              htmlFor="manualCoverImageURL"
+              className="block text-sm font-bold"
+            >
+              または、URL を直接入力
+            </label>
+            <input
+              type="url"
+              id="manualCoverImageURL"
+              name="manualCoverImageURL"
+              className="w-full rounded-md border-2 px-2 py-1"
+              value={newCoverImageURL}
+              onChange={updateNewCoverImageURL}
+              placeholder="カバーイメージのURLを記入してください"
+              required
+            />
+          </div>
         </div>
 
         <div className="space-y-1">

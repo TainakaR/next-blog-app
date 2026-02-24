@@ -2,7 +2,11 @@
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMotorcycle, faPenNib } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMotorcycle,
+  faPenNib,
+  faBars,
+} from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/utils/supabase";
 import { useAuth } from "@/app/_hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -31,23 +35,28 @@ const Header: React.FC = () => {
         <div
           className={twMerge(
             "mx-4 max-w-2xl md:mx-auto",
-            "flex items-center justify-between",
+            "flex flex-col gap-1",
             "text-lg font-bold text-white",
           )}
         >
           <div>
-            <Link href="/" className="font-solid">
+            <Link href="/" className="font-solid text-2xl md:text-3xl">
               <FontAwesomeIcon icon={faMotorcycle} className="mr-1" />
-              BIKE BLOG
+              Bike Blog
             </Link>
           </div>
-          <div className="font-smart flex gap-x-2 md:gap-x-4">
+          <div className="font-smart flex w-full flex-wrap justify-end gap-2">
             {!isLoading &&
               (session ? (
                 <>
                   <Link href="/admin/posts/new" className={postButtonStyle}>
                     <FontAwesomeIcon icon={faPenNib} className="mr-1" />
                     Post
+                  </Link>
+
+                  <Link href="/admin" className={postButtonStyle}>
+                    <FontAwesomeIcon icon={faBars} className="mr-1" />
+                    Admin
                   </Link>
 
                   <button onClick={logout} className={buttonStyle}>

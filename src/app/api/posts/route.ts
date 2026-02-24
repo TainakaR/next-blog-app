@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { Post } from "@/generated/prisma/client";
 
+export const revalidate = 0; // ◀ サーバサイドのキャッシュを無効化する設定
+export const dynamic = "force-dynamic"; // ◀ 〃
+
 export const GET = async (req: NextRequest) => {
   try {
     const posts = await prisma.post.findMany({
-      // ◀ 推論を利用して posts の型を決定
       select: {
         id: true,
         title: true,

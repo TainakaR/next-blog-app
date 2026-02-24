@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faEdit,
+  faTrash,
   faSpinner,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
@@ -60,6 +61,41 @@ const Page: React.FC = () => {
     fetchCategories();
   }, []);
 
+  const handleDelete = async (category: CategoryApiResponse) => {
+    if (
+      !window.confirm(
+        `カテゴリ「${category.name}」を削除してもよろしいですか？`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/admin/categories/${category.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "削除に失敗しました");
+      }
+
+      setCategories((prevCategories) => {
+        if (!prevCategories) return null;
+        return prevCategories.filter((c) => c.id !== category.id);
+      });
+
+      alert("削除しました。");
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main>
       <div className="mb-5 text-2xl font-bold">カテゴリ管理</div>
@@ -67,7 +103,7 @@ const Page: React.FC = () => {
       <div className="mb-5">
         <Link
           href="/admin/categories/new"
-          className="inline-flex items-center rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="inline-flex items-center rounded bg-blue-400 px-4 py-2 text-white hover:bg-blue-600"
         >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           カテゴリ新規作成
@@ -89,7 +125,7 @@ const Page: React.FC = () => {
       )}
 
       {categories && (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4">
           {categories.map((category) => (
             <div
               key={category.id}
@@ -99,13 +135,23 @@ const Page: React.FC = () => {
               )}
             >
               <div className="font-medium">{category.name}</div>
-              <Link
-                href={`/admin/categories/${category.id}`}
-                className="inline-flex items-center rounded bg-gray-500 px-3 py-1 text-white hover:bg-gray-600"
-              >
-                <FontAwesomeIcon icon={faEdit} className="mr-1" />
-                編集・削除
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href={`/admin/categories/${category.id}`}
+                  className="inline-flex items-center rounded bg-indigo-400 px-3 py-1 text-white hover:bg-indigo-600"
+                >
+                  <FontAwesomeIcon icon={faEdit} className="mr-1" />
+                  編集
+                </Link>
+
+                <button
+                  onClick={() => handleDelete(category)}
+                  className="ml-2 inline-flex items-center rounded bg-red-500 px-3 py-1 text-white hover:bg-red-800"
+                >
+                  <FontAwesomeIcon icon={faTrash} className="mr-1" />
+                  削除
+                </button>
+              </div>
             </div>
           ))}
         </div>
