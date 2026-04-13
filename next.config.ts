@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
-  serverExternalPackages: ["jsdom"],
+  transpilePackages: ["jsdom"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "placehold.jp" },
