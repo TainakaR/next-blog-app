@@ -26,11 +26,11 @@ const Page: React.FC = () => {
       <div className="space-y-3">
         <div className="md:flex md:justify-center">
           <div className="font-bold md:w-1/6 md:text-center">名 前</div>
-          <div className="md:w-5/6">寝屋川 タヌキ (Tanuki Neyagawa)</div>
+          <div className="md:w-5/6">多井中 隆之介 (Ryunosuke Tainaka)</div>
         </div>
         <div className="md:flex md:justify-center">
           <div className="font-bold md:w-1/6 md:text-center">連絡先</div>
-          <div className="md:w-5/6">tanuki.neyagawa@example.com</div>
+          <div className="md:w-5/6">rf23067y@st.omu.ac.jp</div>
         </div>
         <div className="md:flex md:justify-center">
           <div className="font-bold md:w-1/6 md:text-center">
@@ -38,10 +38,10 @@ const Page: React.FC = () => {
           </div>
           <div className="md:w-5/6">
             <a
-              href="https://google.com"
+              href="https://tainakar.github.io/PortFolio/"
               className="mr-1 text-blue-500 underline"
             >
-              タヌキ&apos;s Portfolio
+              TAINAKA&apos;s Portfolio
             </a>
             (GitHub Pages)
           </div>
@@ -49,7 +49,7 @@ const Page: React.FC = () => {
         <div className="md:flex md:justify-center">
           <div className="font-bold md:w-1/6 md:text-center">自己紹介</div>
           <div className="md:w-5/6">
-            とある高専の情報系学科3年生です。最近は、ウェブアプリ開発やデザインに興味があって、Next.js
+            公大高専の情報系学科3年生です。最近は、ウェブアプリ開発やデザインに興味があって、Next.js
             (React) の勉強を兼ねて、このブログアプリを構築しました。
             <br />
             このブログでは、日々の学習記録や技術的な発見を共有していければと思います。よろしくお願いします！
