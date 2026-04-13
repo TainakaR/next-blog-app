@@ -33,13 +33,13 @@
 
 ## 📸 スクリーンショット
 
-|                             ホーム画面                             |                              管理ダッシュボード                              |
-| :----------------------------------------------------------------: | :--------------------------------------------------------------------------: |
-| ![Home Page](https://via.placeholder.com/600x400?text=Home+Screen) | ![Admin Dashboard](https://via.placeholder.com/600x400?text=Admin+Dashboard) |
+|             ホーム画面              |            管理ダッシュボード             |
+| :---------------------------------: | :---------------------------------------: |
+| ![Home Page](./screenshots/wo1.png) | ![Admin Dashboard](./screenshots/wo2.png) |
 
-|                            記事詳細ページ                            |                             記事編集画面                             |
-| :------------------------------------------------------------------: | :------------------------------------------------------------------: |
-| ![Post Detail](https://via.placeholder.com/600x400?text=Post+Detail) | ![Post+Editor](https://via.placeholder.com/600x400?text=Post+Editor) |
+|            記事詳細ページ             |             記事編集画面              |
+| :-----------------------------------: | :-----------------------------------: |
+| ![Post Detail](./screenshots/wo3.png) | ![Post+Editor](./screenshots/wo4.png) |
 
 ---
 
