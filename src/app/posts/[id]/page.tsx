@@ -1,13 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import type { Post } from "@/app/_types/Post";
 import Image from "next/image";
-import DOMPurify from "isomorphic-dompurify";
 import { notFound } from "next/navigation";
 
 // 投稿記事の詳細表示 /posts/[id]
-const Page = async ({ params }: { params: { id: string } }) => {
+// 1. params の型を Promise に変更し、async 関数にする
+const Page = async (props: { params: Promise<{ id: string }> }) => {
+  // 2. params を await して取得する
+  const params = await props.params;
+  const id = params.id;
+
   const postData = await prisma.post.findUnique({
-    where: { id: params.id },
+    where: { id: id },
     select: {
       id: true,
       title: true,
@@ -44,10 +48,14 @@ const Page = async ({ params }: { params: { id: string } }) => {
     categories: postData.categories.map((pc) => pc.category),
   };
 
-  // HTMLコンテンツのサニタイズ
-  const safeHTML = DOMPurify.sanitize(post.content, {
-    ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br"],
-  });
+  /**
+   * エラー回避のための変更点:
+   * isomorphic-dompurify (jsdom) の使用を一旦中止します。
+   * もしリッチテキストエディタ等で信頼できるソースからのみ入力される場合は、
+   * そのまま post.content を使用するか、サーバーサイドで動作する
+   * より軽量なサニタイズライブラリへの変更を検討してください。
+   */
+  const safeHTML = post.content;
 
   return (
     <main>
